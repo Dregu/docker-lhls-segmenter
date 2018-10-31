@@ -2,14 +2,14 @@
 
 set -e
 
-segment_duration=4
+segment_duration=1
 playlist_type=live
-segments=3
+segments=2
 
 function start_segmenter() {
     cd /opt/segmenter
     echo "starting segmenter..."
-    ./transport-stream-segmenter-tcp.js 1234 /media segment_$(date +"%s")_ stream.m3u8 $segment_duration 0.0.0.0 $playlist_type $segments
+    ./transport-stream-segmenter-tcp.js 1234 /media s_ stream.m3u8 $segment_duration 0.0.0.0 $playlist_type $segments
 }
 
 function start_chunk_web_server() {
@@ -21,6 +21,11 @@ function start_chunk_web_server() {
 function start_varnish() {
     echo "Starting varnish..."
     service varnish start >/dev/null 2>&1
+}
+
+function start_cron() {
+    echo "Starting cron..."
+    service cron start >/dev/null 2>&1
 }
 
 function usage() {
@@ -66,6 +71,7 @@ function start() {
     echo "Configuration: segments $segments, segment duration $segment_duration, playlist type $playlist_type"
     start_chunk_web_server
     start_varnish
+    start_cron
     start_segmenter
 }
 

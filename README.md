@@ -7,10 +7,12 @@ segment an incoming TS stream received via TCP and publish it to an LHLS playlis
 
 Varnish is used as a cached in front of the nodejs webserver
 
+Chunks go to tmp and are cleaned up every minute
+
 ## Running
 
 ```
-docker run -p 1234:1234 -p 8080:6081 offbytwo/lhls-segmenter
+docker run --tmpfs /media -p 1234:1234 -p 8080:6081 dregu/lhls-segmenter
 ```
 
 ## Testing
